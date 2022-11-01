@@ -2,9 +2,19 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>index</title>
+    <title>todo page</title>
   </head>
   <body>
-    <h1>index page</h1>
+    <h1>ToDo List</h1>
+    <p><%= title %></p>
+
+    <input type="text" />
+    <button>追加</button>
+
+    <ul>
+      <% todos.map((todo)=> { %>
+      <li><%= todo.title %></li>
+      <% }) %>
+    </ul>
   </body>
 </html>

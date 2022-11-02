@@ -8,14 +8,19 @@
     <h1>ToDo List</h1>
     <p><%= title %></p>
 
-    <form action="/" method="post">
+    <form action="/create" method="post">
       <input type="text" name="title" />
       <input type="submit" value="追加" />
     </form>
 
     <ul>
-      <% todos.map((todo)=> { %>
-      <li><%= todo.title %></li>
+      <% todos.map((todo, i)=> { %>
+      <li style="display: flex">
+        <%= i %> <%= todo.title %>
+        <form action="/delete" method="post">
+          <input type="submit" value="削除" />
+        </form>
+      </li>
       <% }) %>
     </ul>
   </body>

@@ -1,11 +1,27 @@
-const express = require("express");
-const app = express();
+import express, { Application, Request, Response } from "express";
 
-app.get("/", function (req: any, res: any) {
+const app: Application = express();
+const PORT = 8000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+let todos = [{ title: "title1" }, { title: "title2" }, { title: "title3" }];
+
+app.get("/", (req: Request, res: Response): void => {
   res.render("./pages/index.ejs", {
     title: "todo aria",
-    todos: [{ title: "title1" }, { title: "title2" }, { title: "title3" }]
+    todos: todos
   });
 });
 
-console.log("http://localhost:" + app.listen(3000).address().port);
+app.post("/", (req: Request, res: Response): void => {
+  console.log(req.body);
+  const todo = req.body;
+  todos.push(todo);
+  res.redirect("/");
+});
+
+app.listen(PORT, () => {
+  console.log(`dev server running at: http://localhost:${PORT}/`);
+});

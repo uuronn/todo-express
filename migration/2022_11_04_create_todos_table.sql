@@ -1,0 +1,6 @@
+use progate;
+
+CREATE TABLE IF NOT EXISTS progate.todos (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    title VARCHAR(255) NOT NULL
+);

@@ -9,6 +9,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 type Todo = {
+  id: string;
   title: string;
 };
 
@@ -27,19 +28,23 @@ let todos = [
 
 connection.connect();
 
-// GET
-app.get("/", (req: Request, res: Response<Todo[]>): void => {
-  let todos;
+const asyncTodosQuery = (): Promise<Todo[]> => {
+  return new Promise((resolve, reject) => {
+    connection.query("SELECT * FROM `todos`", (error, results, fields) => {
+      if (error) return reject(error);
 
-  connection.query("SELECT * FROM `todos` ", function (error, results, fields) {
-    console.log(results);
-    todos = results;
+      resolve(JSON.parse(JSON.stringify(results)));
+    });
   });
+};
+
+// GET
+app.get("/", async (req: Request, res: Response<Todo[]>): Promise<void> => {
+  const todos = await asyncTodosQuery();
 
   res.render("./pages/index.ejs", {
     title: "todo aria",
     todos: todos
-    // ↑型ついてるのかな？？
   });
 });
 

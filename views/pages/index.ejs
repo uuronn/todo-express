@@ -2,9 +2,26 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>index</title>
+    <title>todo page</title>
   </head>
   <body>
-    <h1>index page</h1>
+    <h1>ToDo List</h1>
+    <p><%= title %></p>
+
+    <form action="/create" method="post">
+      <input type="text" name="title" />
+      <input type="submit" value="追加" />
+    </form>
+
+    <ul>
+      <% todos.map((todo, i)=> { %>
+      <li style="display: flex">
+        <%= i %> <%= todo.title %>
+        <form action="/delete" method="post">
+          <input type="submit" value="削除" />
+        </form>
+      </li>
+      <% }) %>
+    </ul>
   </body>
 </html>

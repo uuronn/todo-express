@@ -25,12 +25,11 @@ const connection = mysql.createConnection({
 const asyncTodosQuery = (): Promise<Todo[]> => {
   return new Promise((resolve, reject) => {
     connection.query("SELECT * FROM `todos`", (error, results, fields) => {
-      if (error) {
-        console.log(500);
+      try {
+        resolve(JSON.parse(JSON.stringify(results)));
+      } catch (error) {
         reject(error);
       }
-
-      resolve(JSON.parse(JSON.stringify(results)));
     });
   });
 };
@@ -41,12 +40,11 @@ const asyncTodosCreate = (todo: Todo): Promise<void> => {
     connection.query(
       `insert into todos (title) values ("${todo.title}");`,
       (error, results, fields) => {
-        if (error) {
-          console.log(500);
+        try {
+          resolve(results);
+        } catch (error) {
           reject(error);
         }
-
-        resolve(console.log(200));
       }
     );
   });
@@ -65,8 +63,13 @@ app.get("/", async (req: Request, res: Response<Todo[]>): Promise<void> => {
 // CREATE
 app.post("/create", async (req: Request, res: Response): Promise<void> => {
   const todo: Todo = req.body;
-  await asyncTodosCreate(todo);
-  res.redirect("/");
+
+  try {
+    await asyncTodosCreate(todo);
+    res.redirect("/");
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // DELETE

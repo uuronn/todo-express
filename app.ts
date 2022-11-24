@@ -17,20 +17,22 @@ const connection = mysql.createConnection({
   host: "127.0.0.1",
   user: "root",
   password: "isseiprogram",
-  database: "progate",
-  stringifyObjects: true
+  database: "progate"
 });
 
 // データ取得関数
 const asyncTodosQuery = (): Promise<Todo[]> => {
   return new Promise((resolve, reject) => {
-    connection.query("SELECT * FROM `todos`", (error, results, fields) => {
-      try {
-        resolve(JSON.parse(JSON.stringify(results)));
-      } catch (error) {
-        reject(error);
+    connection.query(
+      "SELECT * FROM `todos` order by title asc",
+      (error, results, fields) => {
+        try {
+          resolve(JSON.parse(JSON.stringify(results)));
+        } catch (error) {
+          reject(error);
+        }
       }
-    });
+    );
   });
 };
 
@@ -38,7 +40,10 @@ const asyncTodosQuery = (): Promise<Todo[]> => {
 const asyncTodosCreate = (todo: Todo): Promise<void> => {
   return new Promise((resolve, reject) => {
     connection.query(
-      `insert into todos (title) values ("${todo.title}");`,
+      {
+        sql: `insert into todos (title) values (?)`,
+        values: [todo.title]
+      },
       (error, results, fields) => {
         try {
           resolve(results);
